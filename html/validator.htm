@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<!-- saved from url=(0034)http://www.kerbores.com/upload/js/ -->
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<meta charset="UTF-8">
+		<title>表单验证器Demo</title>
+		<script src="../frame/jquery-2.1.0.js"></script>
+		<script src="../js/validation.js"></script>
+		<style type="text/css">
+			.fail {
+				border: 1px solid #F00;
+			}
+
+			.success {
+				border: 1px solid #0F0;
+			}
+		</style>
+	</head>
+	<body>
+		<input v-type="email" defaultvalue="kerbores@163.com" errormsg="正确的邮箱地址不应该是酱紫的哦" class="fail">
+		<input v-type="phone" class="fail">
+		<input v-type="number" class="fail">
+		<input v-type="integer" class="fail">
+		<input v-type="chinese" class="success">
+		<input v-type="url" class="fail">
+		<input v-type="post" class="fail">
+		<button onclick="submit()">
+			提交
+		</button>
+		<button onclick="submit1()">
+			自定义回调提交
+		</button>
+	</body>
+</html>

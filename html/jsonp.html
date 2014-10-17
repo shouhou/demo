@@ -1,0 +1,34 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" >
+	<head>
+		<title>jsonp测试例子</title>
+	</head>
+	<body>
+		远程数据如下：
+		<br/>
+		<div id="remote"></div>
+	</body>
+	<script type="text/javascript" src="../frame/jquery-2.1.0.js"></script>
+	<script type="text/javascript">
+		jQuery(document).ready(function() {
+			$.ajax({
+				type : "get",
+				async : false,
+				url : "http://www.xxxxxxxxxxxx.cn/demos/jsonp.php",
+				dataType : "jsonp",
+				jsonp : "callback", //传递给请求处理程序或页面的，用以获得jsonp回调函数名的参数名(一般默认为:callback)
+				jsonpCallback : "feedBackState", //自定义的jsonp回调函数名称，默认为jQuery自动生成的随机函数名
+				success : function(data) {
+					var $ul = $("<ul></ul>");
+					$.each(data, function(i, v) {
+						$("<li/>").text(v["id"] + " " + v["name"]).appendTo($ul);
+					});
+					$("#remote").append($ul);
+				},
+				error : function() {
+					alert('fail');
+				}
+			});
+		});
+	</script>
+</html>

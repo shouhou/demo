@@ -1,0 +1,77 @@
+<!DOCTYPE HTML>
+<html lang="en-US">
+	<head>
+		<meta charset="UTF-8">
+		<title>瀑布流</title>
+		<style type="text/css">
+			body, ul, li, p, img {
+				margin: 0
+			}
+			body {
+				background: #E0E0E0
+			}
+			.title {
+				text-align: center;
+				color: #A73F0E;
+			}
+			ul {
+				padding: 0;
+				list-style: none;
+				margin: 0 auto;
+				width: 1060px;
+			}
+			li {
+				float: left;
+				width: 200px;
+				margin: 5px;
+			}
+			li p {
+				padding: 5px 2px;
+				text-indent: 24px;
+				line-height: 20px;
+				color: #646060;
+			}
+			.clearfix:after {
+				content: '';
+				display: block;
+				clear: both;
+				height: 0;
+				visibility: hidden;
+			}
+			.imgmain {
+				border: 1px solid #ddd;
+				-webkit-box-shadow: 0 3px 6px rgba(0,0,0,.2);
+				-moz-box-shadow: 0 3px 6px rgba(0,0,0,.2);
+				box-shadow: 0 0px 8px rgba(0,0,0,.1);
+				background: #fff;
+				margin-bottom: 20px;
+			}
+			#loading {
+				background: url(http://pingfan1990.sinaapp.com/javacript/wall/images/loading.gif) no-repeat center center;
+				height: 50px;
+				width: 100%;
+				position: fixed;
+				bottom: 0;
+				display: none;
+				text-align: center;
+			}
+		</style>
+	</head>
+	<body>
+		<h1 class='title'>瀑布流</h1>
+		<ul id='watermain' class='clearfix'>
+			<li></li>
+
+			<li></li>
+
+			<li></li>
+
+			<li></li>
+
+			<li></li>
+		</ul>
+		<div id="loading">
+		</div>
+		<script type="text/javascript" src="../js/js_waterfall.js"></script>
+	</body>
+</html>
