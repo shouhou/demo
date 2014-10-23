@@ -30,15 +30,6 @@ ul, li {
     z-index: 1002;
     display: none;
 }
-.test {
-    position: absolute;
-    top: 200px;
-    left: 100px;
-    width: 100px;
-    height: 100px;
-    z-index: 1003;
-    background-color: #6D9645;
-}
 /*Shuffle Css*/
 
 .container {
@@ -98,7 +89,6 @@ ul, li {
     padding: 0;
 }
 body {
-    background: #ccc;
 }
 .div1 {
     width: 1060px;

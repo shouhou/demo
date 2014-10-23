@@ -1,5 +1,6 @@
 /*
- Copyright 2013, KISSY UI Library v1.30
+ Copyright 2013, KISSY UI Library v1.
+ 30
  MIT Licensed
  build time: Jun 21 17:38*/
 var KISSY = function(a) {

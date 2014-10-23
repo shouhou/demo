@@ -32,10 +32,10 @@ drag.prototype = {
         }
     },
     /*
-			检测碰撞
-			@cause 主动元素(就是被拖动的那个)
-			@passive 被动元素(被撞的那个)
-			*/
+            检测碰撞
+            @cause 主动元素(就是被拖动的那个)
+            @passive 被动元素(被撞的那个)
+            */
     collision: function(cause, passive) {
         var ct = cause.offsetTop,
             cl = cause.offsetLeft,
@@ -43,27 +43,28 @@ drag.prototype = {
             cr = cl + cause.offsetWidth;
         var pt = passive.offsetTop,
             pl = passive.offsetLeft,
+            l =
             pb = pt + passive.offsetHeight,
             pr = pl + passive.offsetWidth;
         /*
-				@碰撞原理
-				主动元素 A 被动元素 B
-				A.top < B.bottom &&
-				A.left < B.right &&
-				A.right > B.left &&
-				A.bottom > B.top
-				当这些条件全部成立时，两个元素就碰撞了
-				*/
+                @碰撞原理
+                主动元素 A 被动元素 B
+                A.top < B.bottom &&
+                A.left < B.right &&
+                A.right > B.left &&
+                A.bottom > B.top
+                当这些条件全部成立时，两个元素就碰撞了
+                */
         if (ct < pb && cl < pr && cb > pt && cr > pl) {
             return true;
         }
         return false;
     },
     /*
-			测量距离
-			@orgin 比较元素
-			@list  被比较元素列表
-			*/
+            测量距离
+            @orgin 比较元素
+            @list  被比较元素列表
+            */
     meter: function(orgin, list) {
         var ol = orgin.offsetLeft,
             ot = orgin.offsetTop,
@@ -86,8 +87,8 @@ drag.prototype = {
         return result;
     },
     /*
-			@获取元素在列表中所在的位置
-			*/
+            @获取元素在列表中所在的位置
+            */
     curIndex: function(obj, list) {
         var list = list || []; //为了防止list为空报错
         for (var i = 0, len = list.length; i < len; i++) {
@@ -122,7 +123,6 @@ drag.prototype = {
                 if (cur != style[prop]) {
                     bStop = false;
                 }
-
                 obj.style[prop] = cur + speed + 'px';
             }
             if (bStop) {

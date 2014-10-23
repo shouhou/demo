@@ -34,10 +34,11 @@
             this.next = (this.currentPage < this.page) ? (this.currentPage + 1) : this.page;
         },
         setLink: function() {
+            this.pages.empty();
             this.pages.append($("<a href='javascript:Page.getPage(1)'>首页</a>"));
-            for (var i = this.currentPage - 2; i < this.currentPage + 2; i++) {
-                if (i >= 1) {
-                    this.pages.append($("<a href='javascript:Page.getPage(" + i + ")'>" + i + "</a>"));
+            for (var i = this.currentPage - 2; i <= this.currentPage + 2; i++) {
+                if (i >= 1 &&i<=this.page) {
+                    this.pages.append($("<a href='javascript:Page.getPage(" + i + ")'>  " + i + "  </a>"));
                 }
             };
             this.pages.append($("<a href='javascript:Page.getPage(" + this.page + ")'>末页</a>"));
@@ -45,6 +46,7 @@
         getPage: function(page) {
             this.tabel.find("tr:gt(0)").remove();
             this.currentPage = page;
+            this.setLink();
             var begin = (this.currentPage - 1) * this.pageSize;
             var end = begin + this.pageSize;
             for (var i = begin; i < end; i++) {
