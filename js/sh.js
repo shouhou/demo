@@ -152,41 +152,206 @@
         });
     }
     Load.prototype.load = function() {
-        var scrollBottm = $(document).scrollTop() + $(window).height();
-        $.each(this.list, function(index, val) {
-            var $val = $(val);
-            if ($val.offset().top <= scrollBottm) {//take care
-                if ($val.attr('src') == '') {
-                    $val.attr('src', $val.attr('_src'));
+            var scrollBottm = $(document).scrollTop() + $(window).height();
+            $.each(this.list, function(index, val) {
+                var $val = $(val);
+                if ($val.offset().top <= scrollBottm) { //take care
+                    if ($val.attr('src') == '') {
+                        $val.attr('src', $val.attr('_src'));
+                    }
                 }
+            });
+        }
+        /**
+         * Flow
+         * ------------------------------------------------------------
+         */
+    function Flow() {
+        Sh.call(this);
+        this.box = $("#box");
+        this.index = 1;
+    }
+    sh.inherit(Sh, Flow);
+    Flow.prototype.init = function() {
+        var _this = this;
+        for (var i = 0; i < 5; i++) {
+            $("<ul>").appendTo(this.box);
+        }
+        _this.getPage(1); //must be the first call
+        $(document).scroll(function(event) {
+            var scrollBottm = $(document).scrollTop() + $(window).height();
+            var uls = _this.getUls();
+            var ulBottom = uls.eq(0).offset().top + uls.eq(0).height(); //take care
+            /*console.log("windowHeight:"+$(window).height());
+            console.log("scrollTop:"+$(document).scrollTop());*/
+            if (scrollBottm >= ulBottom) {
+                console.log(scrollBottm);
+                console.log(uls.eq(0).offset().top);
+                _this.index++;
+                _this.getPage(_this.index);
             }
         });
+    };
+    Flow.prototype.getUls = function() {
+        return this.box.find('ul').sort(function(ul1, ul2) {
+            return $(ul1).height() - $(ul2).height();
+        })
     }
+    Flow.prototype.getPage = function(n) {
+        var _this = this;
+        $.ajax({
+                url: 'http://pingfan1990.sinaapp.com/javacript/wall/jsonpdata.php?name=pingfan',
+                type: 'GET',
+                dataType: 'jsonp',
+                data: {
+                    page: n
+                },
+            })
+            .done(function(imgs) {
+                for (var i in imgs) {
+                    var src = "http://pingfan1990.sinaapp.com/javacript/wall/" + imgs[i].image;
+                    var li = $("<li>").html("<img src='" + src + "'></img>");
+                    var uls = _this.getUls();
+                    li.appendTo(uls.eq(0));
+                }
+            });
+    };
 
-    /**
-     * Flow
-     * ------------------------------------------------------------
-     */
-    function Flow(){
+    function Drag() {
         Sh.call(this);
-
-
+        this.wraper = $(".wraper");
+        this.divs = this.wraper.children();
+        this.pos = [];
     }
-
-    sh.inherit(Sh,Flow);
-    
-    Flow.prototype
-
+    sh.inherit(Sh, Drag);
+    Drag.prototype.init = function() {
+        this.wraper.css('position', 'relative'); //care realtive absolute
+        for (var i = this.divs.length - 1; i >= 0; i--) {
+            var div = this.divs.eq(i);
+            var left = div.position().left,
+                top = div.position().top;
+            this.pos[i] = {
+                left: left,
+                top: top
+            }
+            div.css({
+                left: left,
+                top: top,
+                position: 'absolute'
+            });
+        }
+    }
+    Drag.prototype.curIndex = function(el) { //not use jquery element to equal
+        var rtn = -1;
+        $.each(this.divs, function(index, val) {
+            if (val == el) {
+                rtn = index; //can't return directly 
+            }
+        });
+        return rtn;
+    }
+    Drag.prototype.conflict = function(cause, passsive) { //care the spell position
+        var cl = $(cause).position().left,
+            cr = $(cause).position().left + $(cause).width(),
+            ct = $(cause).position().top,
+            cb = $(cause).position().top + $(cause).height();
+        var pl = $(passsive).position().left,
+            pr = $(passsive).position().left + $(passsive).width(),
+            pt = $(passsive).position().top,
+            pb = $(passsive).position().top + $(passsive).height();
+        if (cl < pr && cr > pl && ct < pb && cb > pt) {
+            return true;
+        }
+        return false;
+    };
+    Drag.prototype.calDis = function(el, list) {
+        var _this = this;
+        var ex = $(el).position().left,
+            ey = $(el).position().top;
+        var sum = 999999;
+        curIndex = -1;
+        $.each(list, function(index, val) {
+            var vx = $(val).position().left,
+                vy = $(val).position().top,
+                _sum = Math.abs(vx - ex) + Math.abs(vy - ey); //rememeber the diff
+            if (sum > _sum) {
+                sum = _sum;
+                curIndex = index;
+            }
+        });
+        return list[curIndex];
+    }
+    Drag.prototype.doMove = function(el, style) { //el dom element
+        clearInterval(el.timer);
+        el.timer = setInterval(function() {
+            var lSpeed = (style.left - $(el).position().left) / 10,
+                tSpeed = (style.top - $(el).position().top) / 10;
+            lSpeed = lSpeed > 0 ? Math.ceil(lSpeed) : Math.floor(lSpeed);
+            tSpeed = tSpeed > 0 ? Math.ceil(tSpeed) : Math.floor(tSpeed);
+            $(el).css({
+                left: $(el).position().left + lSpeed,
+                top: $(el).position().top + tSpeed
+            });
+            if ($(el).position().left == style.left && $(el).position().top == style.top) { //care $(el)
+                clearInterval(el.timer);
+            }
+        }, 30);
+    };
+    Drag.prototype.move = function() {
+        var _this = this;
+        $(document).mousedown(function(event) {
+            var target = event.target;
+            if (!$(target).hasClass('block')) {
+                return;
+            }
+            var downX = event.pageX,
+                downY = event.pageY;
+            event.preventDefault();
+            $(document).mousemove(function(event) {
+                var moveX = event.pageX - downX,
+                    moveY = event.pageY - downY;
+                var index = _this.curIndex(target);
+                if (index == -1) {
+                    return;
+                }
+                var pos = _this.pos[index];
+                $(target).css({
+                    left: pos.left + moveX,
+                    top: pos.top + moveY
+                });
+            });
+            $(document).mouseup(function(event) {
+                $(document).unbind('mousemove').unbind('mouseup');
+                var list = [];
+                $.each(_this.divs, function(index, val) {
+                    if (val != target && _this.conflict(target, val)) { //care not contain itself 
+                        list.push(val);
+                    }
+                });
+                if (list.length == 0) {
+                    return;
+                }
+                var tarEl = _this.calDis(target, list),
+                    sourPos = _this.pos[_this.curIndex(tarEl)],
+                    tarPos = _this.pos[_this.curIndex(target)];
+                _this.doMove(target, sourPos);
+                _this.doMove(tarEl, tarPos);
+                _this.pos[_this.curIndex(tarEl)] = tarPos;
+                _this.pos[_this.curIndex(target)] = sourPos;
+            });
+        });
+    }
 
     /**
      * Execute part
      * ------------------------------------------------------------
      */
+    /*var type=new Type();
+    type.type();
+    var popup = new PopUp();
     $("#btn").click(function(event) { //don't forget the #
-        var popup = new PopUp();
         popup.alert(); //don't put in the Sh funciton confict
     });
-
     var shuffle = new Shuffle();
     $(".prev").click(function(event) {
         shuffle.prev();
@@ -194,11 +359,13 @@
     $(".next").click(function(event) {
         shuffle.next();
     });
-
-    var load=new Load();
+    var load = new Load();
     load.init();
     load.load();
+    var flow = new Flow();
+    flow.init();*/
 
-
-
+    var drag = new Drag();
+    drag.init();
+    drag.move();
 })(jQuery, window);

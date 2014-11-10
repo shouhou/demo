@@ -42,16 +42,17 @@
             });
         },
         resize: function() {
-        	var _this=this;
+            var _this = this;
             $(document).scroll(function(event) {
-            	_this.num++;//this object is changed not the flow 
-            	_this.getPage(_this.num);
+                _this.num++; //this object is changed not the flow 
+                _this.getPage(_this.num);
             });
         },
-        say:function(){
-        	alert(this.num);
+        say: function() {
+            alert(this.num);
         }
     };
     window.Flow = new Flow();
 })();
 Flow.init();
+
